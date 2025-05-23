@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import uuid
 import models
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, String, DateTime
 
 
 Base = declarative_base()
