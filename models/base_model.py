@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import uuid
 import models
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, String, DateTime
 
 
 Base = declarative_base()
@@ -18,7 +18,7 @@ class BaseModel:
     created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
     updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
 
-    def _init_(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Instantiation of base model class
         Args:
             args: it won't be used
@@ -32,7 +32,7 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "_class_":
+                if key != "__class__":
                     setattr(self, key, value)
             if "id" not in kwargs:
                 self.id = str(uuid.uuid4())
@@ -44,18 +44,18 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
 
-    def _str_(self):
+    def __str__(self):
         """returns a string
         Return:
             returns a string of class name, id, and dictionary
         """
         return "[{}] ({}) {}".format(
-            type(self)._name, self.id, self.dict_)
+            type(self).__name__, self.id, self.__dict__)
 
-    def _repr_(self):
+    def __repr__(self):
         """return a string representaion
         """
-        return self._str_()
+        return self.__str__()
 
     def save(self):
         """updates the public instance attribute updated_at to current
@@ -67,10 +67,10 @@ class BaseModel:
     def to_dict(self):
         """creates dictionary of the class  and returns
         Return:
-            returns a dictionary of all the key values in _dict_
+            returns a dictionary of all the key values in __dict__
         """
-        my_dict = dict(self._dict_)
-        my_dict["_class"] = str(type(self).name_)
+        my_dict = dict(self.__dict__)
+        my_dict["__class__"] = str(type(self).__name__)
         my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
         if '_sa_instance_state' in my_dict.keys():

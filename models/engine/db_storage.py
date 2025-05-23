@@ -3,7 +3,6 @@
 from os import getenv
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import (create_engine)
-from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import Base
 from models.state import State
 from models.city import City
@@ -18,7 +17,7 @@ class DBStorage:
     __engine = None
     __session = None
 
-    def _init_(self):
+    def __init__(self):
         user = getenv("HBNB_MYSQL_USER")
         passwd = getenv("HBNB_MYSQL_PWD")
         db = getenv("HBNB_MYSQL_DB")
@@ -43,14 +42,14 @@ class DBStorage:
                 cls = eval(cls)
             query = self.__session.query(cls)
             for elem in query:
-                key = "{}.{}".format(type(elem)._name_, elem.id)
+                key = "{}.{}".format(type(elem).__name__, elem.id)
                 dic[key] = elem
         else:
             lista = [State, City, User, Place, Review, Amenity]
             for clase in lista:
                 query = self.__session.query(clase)
                 for elem in query:
-                    key = "{}.{}".format(type(elem)._name_, elem.id)
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
                     dic[key] = elem
         return (dic)
 
