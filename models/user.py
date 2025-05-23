@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 """User class"""
 from models.base_model import BaseModel, Base
@@ -28,4 +27,3 @@ class User(BaseModel, Base):
         'Review',
         backref='user',
         cascade='all, delete-orphan')
-
