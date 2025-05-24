@@ -1,27 +1,28 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
-import models
+""" State Module for HBNB project for AirBNB_clone_v2"""
+
+
 from models.base_model import BaseModel, Base
-import os
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models.city import City
+from models.engine.file_storage import FileStorage
+from os import getenv
 
 
 class State(BaseModel, Base):
-    """ State class """
-
-    __tablename__ = "states"
-
+    """ State class definition in the next line"""
+    __tablename__ = 'states'
     name = Column(String(128), nullable=False)
+    cities = relationship('City', backref='state', cascade="all, delete")
 
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship('City', backref="state",
-                              cascade="all, delete, delete-orphan")
-    else:
+    if getenv("HBNB_TYPE_STORAGE") != 'db':
         @property
         def cities(self):
-            """ Returns the list of City instances with state_id
-            equals to the current State.id. """
-            return [city for city in models.storage.all(City).values()
-                    if city.state_id == self.id]
+            from models import storage
+            from models.city import City
+            """Get a list of all related City objects."""
+            city_list = []
+            for city in list(storage.all(City).values()):
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
