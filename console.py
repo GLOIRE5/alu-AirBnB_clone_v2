@@ -143,7 +143,7 @@ class HBNBCommand(cmd.Cmd):
         If no class is specified, displays all instantiated objects."""
         if not line:
             o = storage.all()
-            print([o[k]._str_() for k in o])
+            print([o[k].__str__() for k in o])
             return
         try:
             args = line.split(" ")
@@ -151,7 +151,7 @@ class HBNBCommand(cmd.Cmd):
                 raise NameError()
 
             o = storage.all(eval(args[0]))
-            print([o[k]._str_() for k in o])
+            print([o[k].__str__() for k in o])
 
         except NameError:
             print("** class doesn't exist **")
@@ -184,9 +184,9 @@ class HBNBCommand(cmd.Cmd):
                 raise ValueError()
             v = objects[key]
             try:
-                v._dict_[my_list[2]] = eval(my_list[3])
+                v.__dict__[my_list[2]] = eval(my_list[3])
             except Exception:
-                v._dict_[my_list[2]] = my_list[3]
+                v.__dict__[my_list[2]] = my_list[3]
                 v.save()
         except SyntaxError:
             print("** class name missing **")
@@ -229,15 +229,15 @@ class HBNBCommand(cmd.Cmd):
         new_list.append(args[0])
         try:
             my_dict = eval(
-                args[1][args[1].find('{'):args[1].find('}') + 1])
+                args[1][args[1].find('{'):args[1].find('}')+1])
         except Exception:
             my_dict = None
         if isinstance(my_dict, dict):
-            new_str = args[1][args[1].find('(') + 1:args[1].find(')')]
+            new_str = args[1][args[1].find('(')+1:args[1].find(')')]
             new_list.append(((new_str.split(", "))[0]).strip('"'))
             new_list.append(my_dict)
             return new_list
-        new_str = args[1][args[1].find('(') + 1:args[1].find(')')]
+        new_str = args[1][args[1].find('(')+1:args[1].find(')')]
         new_list.append(" ".join(new_str.split(", ")))
         return " ".join(i for i in new_list)
 
@@ -268,5 +268,5 @@ class HBNBCommand(cmd.Cmd):
             cmd.Cmd.default(self, line)
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     HBNBCommand().cmdloop()
