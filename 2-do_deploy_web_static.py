@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 """Deploy web static to different servers"""
 import re
